@@ -1,6 +1,5 @@
 'use client';
 import { DepartmentDataInf, DepartmentPropInf } from "@/interfaces/departments/DepartmentInf";
-//import { deleteDepartments, getDepartments } from "@/services/DepartmentService";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { selectDepartments, departmentDeleted, activePageChanged } from "@/redux/slices/departmentSlice";
@@ -8,25 +7,7 @@ import { selectDepartments, departmentDeleted, activePageChanged } from "@/redux
 const DepartmentList: React.FC<DepartmentPropInf> = ({ onEdit }) => {
   let TempDepartments = useAppSelector(selectDepartments);
   const dispatch = useAppDispatch();
-  //const [TempDepartments, setTempDepartments] = useState(dept);
   const [departmentsSeleted, setdepartmentsSeleted] = useState<string[]>([]);
-
-  // useEffect(() => {
-  //   const fetchDepartments = async (): Promise<void> => {
-  //     try {
-  //       if (departments.length === 0) {
-  //         setTempDepartments(useAppSelector(selectDepartments));
-  //       } else {
-  //         setTempDepartments(departments);
-  //       }
-  //     } catch (error) {
-  //       throw error;
-  //     } finally {
-  //       console.log("In finally block of useEffiect of DepartmentList component");
-  //     }
-  //   }
-  //   fetchDepartments();
-  // }, [departments]);
 
   const seleectDepartment = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value, checked } = e.target;
@@ -52,18 +33,13 @@ const DepartmentList: React.FC<DepartmentPropInf> = ({ onEdit }) => {
     }
   }
   const openAddForm = (): void => {
-    //onShowFormFlag(1);
     dispatch(activePageChanged("add"));
   }
   const deleteDepartment = async (): Promise<void> => {
     if (departmentsSeleted.length === 0) {
       alert("Please select an Department");
     } else {
-      // const remainingDepts: DepartmentDataInf[] = await deleteDepartments(departmentsSeleted);
-      // setTempDepartments(remainingDepts);
       dispatch(departmentDeleted(departmentsSeleted));
-      // let temp = useAppSelector(selectDepartments);
-      // setTempDepartments(temp);
     }
   }
   const openEditForm = (): void => {

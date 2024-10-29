@@ -1,10 +1,8 @@
 'use client';
 import { AddDepartmentFormPropsInf, DepartmentDataInf } from "@/interfaces/departments/DepartmentInf";
-import { addDepartment } from "@/services/DepartmentService";
 import { useState } from "react";
 import { departmentAdded } from "@/redux/slices/departmentSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { selectDepartments } from "@/redux/slices/departmentSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const AddDepartment: React.FC<AddDepartmentFormPropsInf> = () => {
     const [formData, setFormData] = useState<DepartmentDataInf>({
@@ -17,8 +15,6 @@ const AddDepartment: React.FC<AddDepartmentFormPropsInf> = () => {
     const handleSubmit = async (): Promise<void> => {
         dispatch(departmentAdded(formData));
         setFormData({ name: "", email: "", phone: "" });
-        //let deptObjArray: DepartmentDataInf[] = useAppSelector(selectDepartments);
-        //onClick(deptObjArray);
     }
     const cancelSubmit = (): void => {
         setFormData({ name: "", email: "", phone: "" });

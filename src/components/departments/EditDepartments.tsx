@@ -2,7 +2,6 @@
 import { DepartmentDataInf, EditDepartmentFormPropsInf } from "@/interfaces/departments/DepartmentInf";
 import { useAppDispatch } from "@/redux/hooks";
 import { departmentEdited } from "@/redux/slices/departmentSlice";
-//import { editDepartment } from "@/services/DepartmentService";
 import { useState } from "react";
 
 const EditDepartment: React.FC<EditDepartmentFormPropsInf> = ({ departments }) => {

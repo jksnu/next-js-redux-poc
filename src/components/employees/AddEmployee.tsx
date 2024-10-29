@@ -1,12 +1,13 @@
 'use client';
-import { DepartmentDataInf } from "@/interfaces/departments/DepartmentInf";
 import { AddEmployeeFormPropsInf, EmployeeDataInf } from "@/interfaces/employees/EmployeeInf";
-import { getDepartments } from "@/services/DepartmentService";
-import { addEmployee } from "@/services/EmployeeService";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { selectDepartments } from "@/redux/slices/departmentSlice";
+import { employeeAdded } from "@/redux/slices/employeeSlice";
 import { useState, useEffect } from "react";
 
-const AddEmployee: React.FC<AddEmployeeFormPropsInf> = ({ onClick }) => {
-    const [departments, setDepartments] = useState<DepartmentDataInf[]>([]);
+const AddEmployee: React.FC<AddEmployeeFormPropsInf> = () => {
+    const dispatch = useAppDispatch();
+    const departments = useAppSelector(selectDepartments);
     const [formData, setFormData] = useState<EmployeeDataInf>({
         name: "",
         email: "",
@@ -15,27 +16,15 @@ const AddEmployee: React.FC<AddEmployeeFormPropsInf> = ({ onClick }) => {
     });
 
     const handleSubmit = async (): Promise<void> => {
-        let empObjArray: EmployeeDataInf[] = await addEmployee(formData);
+        dispatch(employeeAdded(formData));
         setFormData({ name: "", email: "", phone: "", department: "" });
-        onClick(empObjArray);
     }
     const cancelSubmit = (): void => {
         setFormData({ name: "", email: "", phone: "", department: "" });
-        onClick([]);
     }
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>): void => {
         setFormData({ ...formData, [e.target.id]: e.target.value })
     }
-    useEffect(() => {
-        const fetchDepartments = async (): Promise<void> => {
-            try {
-                setDepartments(await getDepartments());
-            } catch (error) {
-                throw error;
-            }
-        }
-        fetchDepartments();
-    }, departments);
 
     return (
         <div className="container d-flex justify-content-center">

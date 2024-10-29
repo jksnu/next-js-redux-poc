@@ -2,27 +2,13 @@
 import { EmployeeDataInf, EmployeePropInf } from "@/interfaces/employees/EmployeeInf";
 import { deleteEmployees, getEmployees } from "@/services/EmployeeService";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { activePageChanged, employeeDeleted, selectEmployees } from "@/redux/slices/employeeSlice";
 
-const EmployeeList: React.FC<EmployeePropInf> = ({ onShowFormFlag, onEdit, employees }) => {
-  const [TempEmployees, setTempEmployees] = useState(employees);
+const EmployeeList: React.FC<EmployeePropInf> = ({ onEdit }) => {
+  const dispatch = useAppDispatch();
+  const TempEmployees = useAppSelector(selectEmployees);
   const [employeesSeleted, setEmployeesSeleted] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchEmployees = async (): Promise<void> => {
-      try {
-        if (employees.length === 0) {
-          setTempEmployees(await getEmployees());
-        } else {
-          setTempEmployees(employees);
-        }
-      } catch (error) {
-        throw error;
-      } finally {
-        console.log("In finally block of useEffiect of EmployeeList component");
-      }
-    }
-    fetchEmployees();
-  }, [employees]);
 
   const seleectEmployee = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value, checked } = e.target;
@@ -48,14 +34,13 @@ const EmployeeList: React.FC<EmployeePropInf> = ({ onShowFormFlag, onEdit, emplo
     }
   }
   const openAddForm = (): void => {
-    onShowFormFlag(1);
+    dispatch(activePageChanged("add"));
   }
   const deleteEmployee = async (): Promise<void> => {
     if (employeesSeleted.length === 0) {
       alert("Please select an Employee");
     } else {
-      const remainingEmps: EmployeeDataInf[] = await deleteEmployees(employeesSeleted);
-      setTempEmployees(remainingEmps);
+      dispatch(employeeDeleted(employeesSeleted));
     }
   }
   const openEditForm = (): void => {
@@ -66,7 +51,7 @@ const EmployeeList: React.FC<EmployeePropInf> = ({ onShowFormFlag, onEdit, emplo
     } else {
       const selectedEmp: EmployeeDataInf[] = TempEmployees.filter((emp: EmployeeDataInf) => employeesSeleted.includes(emp.email));
       onEdit(selectedEmp);
-      onShowFormFlag(2);
+      dispatch(activePageChanged("edit"));
     }
   }
   return (

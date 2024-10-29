@@ -8,16 +8,9 @@ import { useAppSelector } from "@/redux/hooks";
 import { selectActivePage } from "@/redux/slices/departmentSlice";
 
 export default function Departments() {
-  //const [showForm, setShowForm] = useState(0);
   const activePage = useAppSelector(selectActivePage);
   const [departmentsSeleted, setDepartmentsSeleted] = useState<DepartmentDataInf[]>([]);
 
-  // const getDepartment = (): void => {
-  //   setShowForm(0);
-  // }
-  // const updateShowFormFlag = (flagVal: number): void => {
-  //   setShowForm(flagVal);
-  // }
   const getSelectedDepartments = (depts: DepartmentDataInf[]): void => {
     setDepartmentsSeleted(depts);
   }
