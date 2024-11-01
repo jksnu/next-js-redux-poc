@@ -1,35 +1,24 @@
 'use client';
-
-import { ArticleInf } from "@/interfaces/news/NewsInf";
-import { getNews } from "@/services/NewsService";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "../spinner/Spinner";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { fetchNews, selectNews } from "@/redux/slices/newsSlice";
 
 const NewsHeadlines: React.FC = () => {
-  const [newsHeadlines, setNewsHeadlines] = useState<ArticleInf[]>([]);
+  const dispatch = useAppDispatch();  
+  const newsHeadlines = useAppSelector(selectNews)
   const [page, setPage] = useState(1);
   const [totalResult, setTotalResult] = useState(0);
 
   const fetchNewItems = async () => {
-    getNews(page, 5).then((tempNews) => {
-      setTotalResult(tempNews.totalResults);
-      setNewsHeadlines([...newsHeadlines, ...tempNews.articles]);
-      setPage(page + 1);
-    }).catch((err) => {
-      //showBoundary(err);
-    });
+    dispatch(fetchNews({page: page, limit: 5}));
+    setPage(page+1);
   }
 
   useEffect(() => {
-    (async () => {
-      await fetchNewItems();
-    })();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+    dispatch(fetchNews({page: page, limit: 5}));
+  }, newsHeadlines);
 
   return (
     <InfiniteScroll
